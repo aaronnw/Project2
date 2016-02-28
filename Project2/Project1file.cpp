@@ -1,4 +1,4 @@
-/*
+
 #include <iostream>
 using namespace std;
 ///Sets all characters in a string of a given length to \0
@@ -7,8 +7,9 @@ void strEmpty(char* someStr, int length) {
 		someStr[i] = '\0';
 	}
 }
+
 template<class DT>
-class arrayClass{
+class arrayClass {
 private:
 	DT* arrayOfDT;
 	int numElements;
@@ -30,39 +31,33 @@ public:
 	void expand();
 	int getCapacity();
 };
-
 ///Class for web address information
 class webAddressInfo {
-	friend 	ostream& operator<< (ostream& s, webAddressInfo& w); //Overloaded ostream operator
 private:
 	char url[201]; //allow a maximum of 200 characters
 public:
-	webAddressInfo(); // Default constructor
-	webAddressInfo(char* inputString); // Initalizer constructor
-	webAddressInfo(const webAddressInfo& w); // Copy constructor
-	~webAddressInfo(); // Destructor
-	void operator= (const webAddressInfo& w); //Overloaded assignment operator
+	webAddressInfo();
+	webAddressInfo(char* inputString);
 	void setWebAddressInfo(char* inputString);
 	char* getWebAddressInfo();
 	void display();
 };
+
 ///Class for each browser tab
 class browserTab {
-	friend 	ostream& operator<< (ostream& s, browserTab& b); //Overloaded ostream operator
 protected:
 	int numAddress; //Current number of web addresses in this tab
-	webAddressInfo webAddresses[20]; //Web addreses in this tab
+	arrayClass<webAddressInfo> webAddresses; //Web addreses in this tab
 	int currentAddress; //index of current location in webAddresses
+						// other private methods if necessary for this class
 public:
-	browserTab(); // Default constructor
-	browserTab(char* inputString); // Initializer constructor
-	browserTab(const browserTab& b); // Copy constructor
-	~browserTab(); // Destructor
-	void operator= (const browserTab& b); //Overloaded assignment operator
+	browserTab();
+	browserTab(char* inputString); //creates a new tab with the inputString
 	webAddressInfo& forward();
 	webAddressInfo& backward();
 	void addAddress(char* inputString);
 	void display();
+	// and other public methods if necessary
 };
 
 //////////////////////////////////////////////////////////////////////////// 
@@ -82,7 +77,7 @@ arrayClass<DT>::arrayClass(DT * existingArray) {
 ///Initializer constructor
 template<class DT>
 arrayClass<DT>::arrayClass(int c) {
-	numElements = 0; 
+	numElements = 0;
 	capacity = c;
 	arrayOfDT = new DT[capacity];
 }
@@ -112,7 +107,7 @@ void arrayClass<DT>::operator=(const arrayClass & ac) {
 }
 ///Overloaded square bracket operator
 template<class DT>
-DT & arrayClass<DT>::operator[](int i){
+DT & arrayClass<DT>::operator[](int i) {
 	//TODO if ((i < 0) || (i >= (capacity - 1))) throw errors;
 	return arrayOfDT[i];
 }
@@ -133,7 +128,7 @@ void arrayClass<DT>::add(DT & x) {
 template<class DT>
 void arrayClass<DT>::insertAt(int i, DT & x) {
 	if ((numElements < capacity) && (i < capacity)) {
-		for (int k = (numElements+1); k > i; k--) {
+		for (int k = (numElements + 1); k > i; k--) {
 			arrayOfDT[k] = arrayOfDT[k - 1];
 		}
 		arrayOfDT[i] = x;
@@ -153,7 +148,7 @@ void arrayClass<DT>::remove() {
 template<class DT>
 void arrayClass<DT>::removeAt(int i) {
 	if (i < capacity) {
-		for (i; i < (numElements-1); i++) {
+		for (i; i < (numElements - 1); i++) {
 			arrayOfDT[i] = arrayOfDT[i + 1];
 		}
 		numElements--;
@@ -179,9 +174,6 @@ template<class DT>
 int arrayClass<DT>::getCapacity() {
 	return capacity;
 }
-
-////////////////////////////////////////////////////////////////////////////
-
 ///Default constructor
 webAddressInfo::webAddressInfo() {
 }
@@ -194,20 +186,6 @@ webAddressInfo::webAddressInfo(char* inputString) {
 		url[i] = inputString[i];
 		i++;
 	}
-}
-///Copy constructor
-webAddressInfo::webAddressInfo(const webAddressInfo & w) {
-}
-/// Destructor
-webAddressInfo::~webAddressInfo() {
-}
-///Overloaded assignment operator for web address info
-void webAddressInfo::operator=(const webAddressInfo & w) {
-
-}
-///Overloaded ostream operator for web address info
-ostream & operator<<(ostream& s, webAddressInfo& w) {
-	return s;
 }
 ///Sets the url to a given string
 void webAddressInfo::setWebAddressInfo(char * inputString) {
@@ -229,9 +207,6 @@ void webAddressInfo::display() {
 		i++;
 	}
 }
-
-////////////////////////////////////////////////////////////////////////////
-
 ///Default constructor
 browserTab::browserTab() {
 	numAddress = 0;
@@ -241,19 +216,6 @@ browserTab::browserTab(char* inputString) {
 	numAddress = 1;
 	webAddresses[numAddress - 1] = webAddressInfo(inputString);
 	currentAddress = numAddress - 1;
-}
-///Copy constructor
-browserTab::browserTab(const browserTab & b) {
-}
-///Destructor
-browserTab::~browserTab() {
-}
-///Overloaded assignment operator for browser tab
-void browserTab::operator=(const browserTab & b) {
-}
-///Overloaded ostream operator for browser tab
-ostream & operator<<(ostream& s, browserTab& b) {
-	return s;
 }
 ///Returns the information for an address forward from the current
 webAddressInfo& browserTab::forward() {
@@ -289,7 +251,7 @@ void browserTab::display() {
 }
 ///Main method
 int main() {
-	browserTab myTabs[20];
+	arrayClass<browserTab> myTabs;
 	int tabNumber = 0;
 	int i;
 	char webAddress[201];
@@ -335,15 +297,6 @@ int main() {
 			}
 			break;
 		}
-		case 'M': {
-			// 10	M 8	 This	line	means	that	tab	10	is	moved	before	tab	8.
-		}
-		case 'R': {
-			//Remove a tab
-		}
-		case 'C': {
-			//Change url for a tab
-		}
 				  //Print all the address information in the tab
 		case 'P': {
 			if (!cin.eof()) {
@@ -361,4 +314,3 @@ int main() {
 	}
 	return 0;
 }
-*/
