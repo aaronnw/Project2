@@ -1,13 +1,10 @@
-
 #include <iostream>
 using namespace std;
-///Sets all characters in a string of a given length to \0
 void strEmpty(char* someStr, int length) {
 	for (int i = 0; i < length; i++) {
 		someStr[i] = '\0';
 	}
 }
-
 template<class DT>
 class arrayClass {
 private:
@@ -29,17 +26,18 @@ public:
 	void remove();
 	void removeAt(int i);
 	void expand();
+	void empty();
 	int getCapacity();
 };
 ///Class for web address information
 class webAddressInfo {
 private:
-	char url[201]; //allow a maximum of 200 characters
+	arrayClass<char> url; //allow a a dynamic amount of characters
 public:
 	webAddressInfo();
-	webAddressInfo(char* inputString);
-	void setWebAddressInfo(char* inputString);
-	char* getWebAddressInfo();
+	webAddressInfo(arrayClass<char> inputString);
+	void setWebAddressInfo(arrayClass<char> inputString);
+	arrayClass<char> getWebAddressInfo();
 	void display();
 };
 
@@ -55,7 +53,7 @@ public:
 	browserTab(char* inputString); //creates a new tab with the inputString
 	webAddressInfo& forward();
 	webAddressInfo& backward();
-	void addAddress(char* inputString);
+	void addAddress(arrayClass<char> inputString);
 	void display();
 	// and other public methods if necessary
 };
@@ -171,6 +169,12 @@ void arrayClass<DT>::expand() {
 	delete[] newArray;
 }
 template<class DT>
+void arrayClass<DT>::empty() {
+	for (int i = 0; i < capacity; i++) {
+		arrayOfDT[i] = '\0';
+	}
+}
+template<class DT>
 int arrayClass<DT>::getCapacity() {
 	return capacity;
 }
@@ -178,9 +182,9 @@ int arrayClass<DT>::getCapacity() {
 webAddressInfo::webAddressInfo() {
 }
 ///Initializer
-webAddressInfo::webAddressInfo(char* inputString) {
+webAddressInfo::webAddressInfo(arrayClass<char> inputString) {
 	int i = 0;
-	strEmpty(url, 201);
+	url.empty();
 	//Make a deep copy from the input string to the url
 	while (inputString[i] != '\0') {
 		url[i] = inputString[i];
@@ -188,14 +192,14 @@ webAddressInfo::webAddressInfo(char* inputString) {
 	}
 }
 ///Sets the url to a given string
-void webAddressInfo::setWebAddressInfo(char * inputString) {
+void webAddressInfo::setWebAddressInfo(arrayClass<char> inputString) {
 	int i = 0;
 	while (inputString[i] != '\0') {
 		url[i] = inputString[i];
 	}
 }
 ///Returns the character array for the web address
-char* webAddressInfo::getWebAddressInfo() {
+arrayClass<char> webAddressInfo::getWebAddressInfo() {
 	return url;
 }
 ///Displays the information for a single web address
@@ -238,7 +242,7 @@ webAddressInfo& browserTab::backward() {
 	}
 }
 ///Adds a new address to a tab
-void browserTab::addAddress(char* inputString) {
+void browserTab::addAddress(arrayClass<char> inputString) {
 	numAddress++;
 	webAddresses[numAddress - 1] = webAddressInfo(inputString);
 	currentAddress = numAddress - 1;
@@ -254,7 +258,7 @@ int main() {
 	arrayClass<browserTab> myTabs;
 	int tabNumber = 0;
 	int i;
-	char webAddress[201];
+	arrayClass<char> webAddress;
 	char c;
 	char blank = ' ';
 	char action;
@@ -264,7 +268,7 @@ int main() {
 		cin >> tabNumber;
 		cin.get(blank);
 		cin.get(action);
-		strEmpty(webAddress, 201);
+		webAddress.empty();
 		switch (action) {
 			//Create a new address information object with the url and add it to a tab
 		case 'N': {
@@ -277,7 +281,9 @@ int main() {
 			} while ((c != '\n') && (i < 201) && !cin.eof());
 			new webAddressInfo(webAddress);
 			myTabs[tabNumber].addAddress(webAddress);
-			cout << tabNumber << " " << action << " " << webAddress;
+			cout << tabNumber;
+			cout << " " << action << " ";
+//			cout << webAddress;
 			break;
 		}
 				  //Move to the next address in the tab and display the url
