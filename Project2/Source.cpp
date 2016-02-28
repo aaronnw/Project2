@@ -119,7 +119,6 @@ webAddressInfo& browserTab::forward() {
 		return webAddresses[currentAddress];
 	}
 }
-
 ///Returns the information for an address backward from the current
 webAddressInfo& browserTab::backward() {
 	//If told to go backward from the first address, just return the current
