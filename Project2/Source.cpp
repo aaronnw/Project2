@@ -6,6 +6,25 @@ void strEmpty(char* someStr, int length) {
 		someStr[i] = '\0';
 	}
 }
+template<class DT>
+class arrayClass{
+private:
+	DT* arrayOfDT;
+	int size;
+	int capacity;
+	int multiplier;
+public:
+	arrayClass(); //Default constructor
+	arrayClass(DT* existingArray); // Initalizer constructor
+	arrayClass(const arrayClass& ac); // Copy constructor
+	~arrayClass(); // Destructor
+	void operator= (const arrayClass& ac); //Overloaded assignment operator
+	DT& operator[](int i);
+	add(DT& x);
+	insertAt(int i, DT& x);
+	remove();
+	removeAt(int i);
+};
 ///Class for web address information
 class webAddressInfo {
 	friend 	ostream& operator<< (ostream& s, webAddressInfo& w); //Overloaded ostream operator
@@ -39,6 +58,53 @@ public:
 	void addAddress(char* inputString);
 	void display();
 };
+
+//////////////////////////////////////////////////////////////////////////// 
+
+///Default constructor
+template<class DT>
+arrayClass<DT>::arrayClass() {
+}
+///Initializer constructor
+template<class DT>
+arrayClass<DT>::arrayClass(DT * existingArray) {
+}
+///Copy constructor
+template<class DT>
+arrayClass<DT>::arrayClass(const arrayClass & ac) {
+}
+///Destructor
+template<class DT>
+arrayClass<DT>::~arrayClass() {
+}
+///Overloaded assignment operator
+template<class DT>
+void arrayClass<DT>::operator=(const arrayClass & ac) {
+}
+///Overloaded square bracket operator
+template<class DT>
+DT & arrayClass<DT>::operator[](int i) {
+	// TODO: insert return statement here
+}
+
+template<class DT>
+arrayClass<DT>::add(DT & x) {
+}
+
+template<class DT>
+arrayClass<DT>::insertAt(int i, DT & x) {
+}
+
+template<class DT>
+arrayClass<DT>::remove() {
+}
+
+template<class DT>
+arrayClass<DT>::removeAt(int i) {
+}
+
+////////////////////////////////////////////////////////////////////////////
+
 ///Default constructor
 webAddressInfo::webAddressInfo() {
 }
@@ -86,6 +152,9 @@ void webAddressInfo::display() {
 		i++;
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////
+
 ///Default constructor
 browserTab::browserTab() {
 	numAddress = 0;
@@ -215,3 +284,4 @@ int main() {
 	}
 	return 0;
 }
+
