@@ -5,9 +5,11 @@ void strEmpty(char* someStr, int length) {
 		someStr[i] = '\0';
 	}
 }
+
 template<class DT>
 class arrayClass {
-	friend 	ostream& operator<< (ostream& s, arrayClass<DT>& ac); //Overloaded ostream operator
+	template<class T>
+	friend ostream& operator<< (ostream& s, arrayClass<T>& ac); //Overloaded ostream operator
 private:
 	DT* arrayOfDT;
 	int numElements;
@@ -195,19 +197,15 @@ int arrayClass<DT>::getCapacity() {
 	return capacity;
 }
 
-//Overloaded ostream operator
 template<class DT>
 ostream& operator<< (ostream& s, arrayClass<DT>& ac) {
-	s << "[";
 	for (int i = 0; i < ac.getSize(); i++) {
-		if (i > 0) {
-			s << ',';
-		}
 		s << ac[i];
 	}
-	s << "]";
 	return s;
+
 }
+
 ///Default constructor
 webAddressInfo::webAddressInfo() {
 }
@@ -320,7 +318,6 @@ int main() {
 			myTabs[tabNumber].addAddress(webAddress);
 			cout << tabNumber << " " << action << " ";
 			myTabs[tabNumber].display();
-			cout << webAddress;
 			break;
 		}
 				  //Move to the next address in the tab and display the url
