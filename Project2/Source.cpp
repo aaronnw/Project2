@@ -435,6 +435,7 @@ int main() {
 				if (tabNumber > myTabs.getSize()) {
 					throw WrongTabError();
 				}
+				cin.get(c);
 				while ((c != '\n') && !cin.eof()){
 					cin.get(c);
 				}
