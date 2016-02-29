@@ -37,6 +37,7 @@ public:
 };
 ///Class for web address information
 class webAddressInfo {
+	friend ostream& operator<< (ostream& s, webAddressInfo& info); //Overloaded ostream operator
 private:
 	arrayClass<char> url; //allow a a dynamic amount of characters
 public:
@@ -44,6 +45,7 @@ public:
 	webAddressInfo(arrayClass<char> inputString); //Initalizer constructor
 	webAddressInfo(webAddressInfo& info); // Copy constructor
 	~webAddressInfo(); // Destructor
+	void operator= (const webAddressInfo& info); //Overloaded assignment operator
 	void setWebAddressInfo(arrayClass<char> inputString); 
 	arrayClass<char> getWebAddressInfo();
 	void display();
@@ -51,16 +53,17 @@ public:
 
 ///Class for each browser tab
 class browserTab {
+	friend ostream& operator<< (ostream& s, browserTab& tab); //Overloaded ostream operator
 protected:
 	int numAddress; //Current number of web addresses in this tab
 	arrayClass<webAddressInfo> webAddresses; //Web addreses in this tab
 	int currentAddress; //index of current location in webAddresses
-						// other private methods if necessary for this class
 public:
 	browserTab();  //Default constructor
 	browserTab(arrayClass<char> inputString); //Initalizer constructor
 	browserTab(browserTab& tab); // Copy constructor
 	~browserTab(); // Destructor
+	void operator= (const browserTab& tab); //Overloaded assignment operator
 	webAddressInfo& forward();
 	webAddressInfo& backward();
 	void addAddress(arrayClass<char> inputString);
@@ -229,6 +232,9 @@ webAddressInfo::webAddressInfo(webAddressInfo & info) {
 }
 webAddressInfo::~webAddressInfo() {
 }
+void webAddressInfo::operator=(const webAddressInfo & info) {
+	url = info.url;
+}
 ///Sets the url to a given string
 void webAddressInfo::setWebAddressInfo(arrayClass<char> inputString) {
 	int i = 0;
@@ -256,6 +262,11 @@ void webAddressInfo::display() {
 		cout << url[i];
 }
 
+ostream& operator<< (ostream& s, webAddressInfo& info) {
+	//TODO
+	return s;
+
+}
 //////////////////////////////////////////////////////////////////////////// 
 
 ///Default constructor
@@ -271,6 +282,11 @@ browserTab::browserTab(arrayClass<char> inputString) {
 browserTab::browserTab(browserTab & tab) {
 }
 browserTab::~browserTab() {
+}
+void browserTab::operator=(const browserTab & tab) {
+	numAddress = tab.numAddress;
+	webAddresses = tab.webAddresses;
+	currentAddress = tab.currentAddress;
 }
 ///Returns the information for an address forward from the current
 webAddressInfo& browserTab::forward() {
@@ -305,6 +321,11 @@ void browserTab::display() {
 	}
 }
 
+ostream& operator<< (ostream& s, browserTab& tab) {
+	//TODO
+	return s;
+
+}
 //////////////////////////////////////////////////////////////////////////// 
 
 ///Main method
