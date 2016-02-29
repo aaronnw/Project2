@@ -6,6 +6,9 @@ void strEmpty(char* someStr, int length) {
 	}
 }
 
+class WrongTabError {};
+class WrongActionError {};
+
 template<class DT>
 class arrayClass {
 	template<class T>
@@ -339,79 +342,93 @@ int main() {
 	char action;
 	// while end of file is not reached
 	while (!cin.eof()) {
-		//Read in the first characters
-		cin >> tabNumber;
-		cin.get(blank);
-		cin.get(action);
-		webAddress.empty();
-		switch (action) {
-			//Create a new address information object with the url and add it to a tab
-		case 'N': {
-			i = 0;
-			do {
-				cin.get(c);
-				if (c != '\n') {
-					webAddress.add(c);// [i++] = c;
+		try {
+			//Read in the first characters
+			cin >> tabNumber;
+			cin.get(blank);
+			cin.get(action);
+			webAddress.empty();
+			switch (action) {
+				//Create a new address information object with the url and add it to a tab
+			case 'N': {
+				i = 0;
+				do {
+					cin.get(c);
+					if (c != '\n') {
+						webAddress.add(c);// [i++] = c;
+					}
+				} while ((c != '\n') && (i < 201) && !cin.eof());
+				new webAddressInfo(webAddress);
+				myTabs[tabNumber].addAddress(webAddress);
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].display();
+				break;
+			}
+					  //Move to the next address in the tab and display the url
+			case 'F': {
+				if (!cin.eof()) {
+					cout << tabNumber << " " << action << " ";
+					myTabs[tabNumber].forward().display();
 				}
-			} while ((c != '\n') && (i < 201) && !cin.eof());
-			new webAddressInfo(webAddress);
-			myTabs[tabNumber].addAddress(webAddress);
-			cout << tabNumber << " " << action << " ";
-			myTabs[tabNumber].display();
-			break;
-		}
-				  //Move to the next address in the tab and display the url
-		case 'F': {
-			if (!cin.eof()) {
-				cout << tabNumber << " " << action << " ";
-				myTabs[tabNumber].forward().display();
+				break;
 			}
-			break;
-		}
-				  //Move to the previous address in the tab and display the url
-		case 'B': {
-			if (!cin.eof()) {
-				cout << tabNumber << " " << action << " ";
-				myTabs[tabNumber].backward().display();
+					  //Move to the previous address in the tab and display the url
+			case 'B': {
+				if (!cin.eof()) {
+					cout << tabNumber << " " << action << " ";
+					myTabs[tabNumber].backward().display();
 
+				}
+				break;
 			}
-			break;
-		}
-				  //Print all the address information in the tab
-		case 'P': {
-			if (!cin.eof()) {
-				cout << tabNumber << " " << action << " ";
-				myTabs[tabNumber].display();
+					  //Print all the address information in the tab
+			case 'P': {
+				if (!cin.eof()) {
+					cout << tabNumber << " " << action << " ";
+					myTabs[tabNumber].display();
+				}
+				break;
 			}
-			break;
-		}
-		case 'M': {
-			if (!cin.eof()) {
-				cout << tabNumber << " " << action << " ";
-				myTabs[tabNumber].display();
+			case 'M': {
+				if (!cin.eof()) {
+					cout << tabNumber << " " << action << " ";
+					myTabs[tabNumber].display();
+				}
+				break;
 			}
-			break;
-		}
-		case 'R': {
-			if (!cin.eof()) {
-				cout << tabNumber << " " << action << " ";
-				myTabs[tabNumber].display();
+			case 'R': {
+				if (!cin.eof()) {
+					cout << tabNumber << " " << action << " ";
+					myTabs[tabNumber].display();
+				}
+				break;
 			}
-			break;
-		}
-		case 'C': {
-			if (!cin.eof()) {
-				cout << tabNumber << " " << action << " ";
-				myTabs[tabNumber].display();
+			case 'C': {
+				if (!cin.eof()) {
+					cout << tabNumber << " " << action << " ";
+					myTabs[tabNumber].display();
+				}
+				break;
 			}
-			break;
-		}
 
-		default: {
+			default: {
+			}
+			}
+			cout << endl;
 		}
+		catch (WrongActionError) {
+			cout << "Wrong action" << endl;
+			cin.get(c);
+			while (c != '\n') {
+				cin.get(c);
+			}
 		}
-		cout << endl;
-
+		catch (WrongTabError) {
+			cout << "Wrong tab" << endl;
+			while (c != '\n') {
+				cin.get(c);
+			}
+		}
 	}
 	return 0;
 }
