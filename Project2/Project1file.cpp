@@ -6,9 +6,6 @@ void strEmpty(char* someStr, int length) {
 	}
 }
 
-class WrongTabError {};
-class WrongActionError {};
-
 template<class DT>
 class arrayClass {
 	template<class T>
@@ -40,15 +37,11 @@ public:
 };
 ///Class for web address information
 class webAddressInfo {
-	friend ostream& operator<< (ostream& s, webAddressInfo& info); //Overloaded ostream operator
 private:
 	arrayClass<char> url; //allow a a dynamic amount of characters
 public:
-	webAddressInfo(); //Default constructor
-	webAddressInfo(arrayClass<char> inputString); //Initializer constructor
-	webAddressInfo(webAddressInfo& info); //Copy constructor
-	~webAddressInfo(); //Destructor
-	void operator= (const webAddressInfo& info); //Overloaded assignment operator
+	webAddressInfo();
+	webAddressInfo(arrayClass<char> inputString);
 	void setWebAddressInfo(arrayClass<char> inputString);
 	arrayClass<char> getWebAddressInfo();
 	void display();
@@ -60,13 +53,15 @@ protected:
 	int numAddress; //Current number of web addresses in this tab
 	arrayClass<webAddressInfo> webAddresses; //Web addreses in this tab
 	int currentAddress; //index of current location in webAddresses
+						// other private methods if necessary for this class
 public:
-	browserTab(); //Default constructor
-	browserTab(arrayClass<char> inputString); //Initializer constructor
+	browserTab();
+	browserTab(char* inputString); //creates a new tab with the inputString
 	webAddressInfo& forward();
 	webAddressInfo& backward();
 	void addAddress(arrayClass<char> inputString);
 	void display();
+	// and other public methods if necessary
 };
 
 //////////////////////////////////////////////////////////////////////////// 
@@ -132,6 +127,7 @@ void arrayClass<DT>::add(DT & x) {
 		expand();
 		add(x);
 	}
+
 }
 
 template<class DT>
@@ -210,8 +206,6 @@ ostream& operator<< (ostream& s, arrayClass<DT>& ac) {
 
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-
 ///Default constructor
 webAddressInfo::webAddressInfo() {
 }
@@ -225,12 +219,6 @@ webAddressInfo::webAddressInfo(arrayClass<char> inputString) {
 	//	i++;
 	//}
 	url = inputString;
-}
-webAddressInfo::webAddressInfo(webAddressInfo & info) {
-}
-webAddressInfo::~webAddressInfo() {
-}
-void webAddressInfo::operator=(const webAddressInfo & info) {
 }
 ///Sets the url to a given string
 void webAddressInfo::setWebAddressInfo(arrayClass<char> inputString) {
@@ -255,23 +243,15 @@ void webAddressInfo::display() {
 	//	cout << url[i];
 	//	i++;
 	//}
-	for (int i = 0; i < url.getSize(); ++i) {
+	for (int i = 0; i < url.getSize(); ++i)
 		cout << url[i];
-	}
 }
-ostream& operator<< (ostream& s, webAddressInfo& info) {
-	//TODO
-	return s;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////
-
 ///Default constructor
 browserTab::browserTab() {
 	numAddress = 0;
 }
 ///Initializer
-browserTab::browserTab(arrayClass<char> inputString) {
+browserTab::browserTab(char* inputString) {
 	numAddress = 1;
 	webAddresses[numAddress - 1] = webAddressInfo(inputString);
 	currentAddress = numAddress - 1;
@@ -308,13 +288,10 @@ void browserTab::display() {
 		webAddresses[i].display();
 	}
 }
-
-///////////////////////////////////////////////////////////////////////////////////////
 ///Main method
 int main() {
 	arrayClass<browserTab> myTabs;
 	int tabNumber = 0;
-	int targetTabNumber;
 	int i;
 	arrayClass<char> webAddress;
 	char c;
@@ -322,94 +299,78 @@ int main() {
 	char action;
 	// while end of file is not reached
 	while (!cin.eof()) {
-		try {
-			//Read in the first characters
-			cin >> tabNumber;
-			cin.get(blank);
-			cin.get(action);
-			webAddress.empty();
-			switch (action) {
-				//Create a new address information object with the url and add it to a tab
-			case 'N': {
-				i = 0;
-				do {
-					cin.get(c);
-					if (c != '\n') {
-						webAddress.add(c);// [i++] = c;
-					}
-				} while ((c != '\n') && !cin.eof());
-				new webAddressInfo(webAddress);
-				myTabs[tabNumber].addAddress(webAddress);
+		//Read in the first characters
+		cin >> tabNumber;
+		cin.get(blank);
+		cin.get(action);
+		webAddress.empty();
+		switch (action) {
+			//Create a new address information object with the url and add it to a tab
+		case 'N': {
+			i = 0;
+			do {
+				cin.get(c);
+				if (c != '\n') {
+					webAddress.add(c);// [i++] = c;
+				}
+			} while ((c != '\n') && (i < 201) && !cin.eof());
+			new webAddressInfo(webAddress);
+			myTabs[tabNumber].addAddress(webAddress);
+			cout << tabNumber << " " << action << " ";
+			myTabs[tabNumber].display();
+			break;
+		}
+				  //Move to the next address in the tab and display the url
+		case 'F': {
+			if (!cin.eof()) {
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].forward().display();
+			}
+			break;
+		}
+				  //Move to the previous address in the tab and display the url
+		case 'B': {
+			if (!cin.eof()) {
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].backward().display();
+
+			}
+			break;
+		}
+				  //Print all the address information in the tab
+		case 'P': {
+			if (!cin.eof()) {
 				cout << tabNumber << " " << action << " ";
 				myTabs[tabNumber].display();
-				break;
 			}
-					  //Move to the next address in the tab and display the url
-			case 'F': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].forward().display();
-				}
-				break;
+			break;
+		}
+		case 'M': {
+			if (!cin.eof()) {
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].display();
 			}
-					  //Move to the previous address in the tab and display the url
-			case 'B': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].backward().display();
+			break;
+		}
+		case 'R': {
+			if (!cin.eof()) {
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].display();
+			}
+			break;
+		}
+		case 'C': {
+			if (!cin.eof()) {
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].display();
+			}
+			break;
+		}
 
-				}
-				break;
-			}
-					  //Print all the address information in the tab
-			case 'P': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].display();
-				}
-				break;
-			}
-			case 'M': {
-				cin.get(c);
-				cin.get(c);
-				targetTabNumber = c;
-				// myTabs[tabNumber].moveTo(myTabs, targetTabNumber);
-				break;
-			}
-			case 'R': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].display();
-				}
-				break;
-			}
-			case 'C': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].display();
-				}
-				break;
-			}
-
-			default: {
-				throw WrongActionError();
-			}
-			}
-			cout << endl;
+		default: {
 		}
-		catch (WrongActionError) {
-			cout << "Wrong action" << endl;
-			cin.get(c);
-			while (c != '\n') {
-				cin.get(c);
-			}
 		}
-		catch (WrongTabError) {
-			cout << "Wrong tab" << endl;
-			while (c != '\n') {
-				cin.get(c);
-			}
-		}
+		cout << endl;
 
 	}
 	return 0;
