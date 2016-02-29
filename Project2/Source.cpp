@@ -15,7 +15,6 @@ private:
 	const int defaultCapacity = 50;
 public:
 	arrayClass(); //Default constructor
-	arrayClass(DT* existingArray); //Initalizer constructor
 	arrayClass(int c); //Initializer constructor
 	arrayClass(const arrayClass<DT>& ac); // Copy constructor
 	~arrayClass(); // Destructor
@@ -23,14 +22,11 @@ public:
 	DT& operator[](int i);
 	void add(DT& x);
 	void insertAt(int i, DT& x);
-	void remove();
 	void removeAt(int i);
 	void expand();
 	void empty();
 	int getCapacity();
-	int getSize() {
-		return numElements;
-	}
+	int getSize();
 };
 ///Class for web address information
 class webAddressInfo {
@@ -195,6 +191,11 @@ template<class DT>
 int arrayClass<DT>::getCapacity() {
 	return capacity;
 }
+///Return the number of elements
+template<class DT>
+int arrayClass<DT>::getSize() {
+	return numElements;
+}
 ///Overloaded ostream operator
 template<class DT>
 ostream& operator<< (ostream& s, arrayClass<DT>& ac) {
@@ -354,6 +355,9 @@ int main() {
 			cin >> tabNumber;
 			cin.get(blank);
 			cin.get(action);
+			//If a new action is not read
+			if (action == 'q')
+				break;
 			webAddress.empty();
 			switch (action) {
 				//Create a new address information object with the url and add it to a tab
@@ -431,6 +435,9 @@ int main() {
 				if (tabNumber > myTabs.getSize()) {
 					throw WrongTabError();
 				}
+				while ((c != '\n') && !cin.eof()){
+					cin.get(c);
+				}
 				cout << tabNumber << " " << action << " " << " Removed tab " << tabNumber;
 				myTabs.removeAt(tabNumber);
 				break;
@@ -462,16 +469,19 @@ int main() {
 		catch (WrongActionError) {
 			cout << "Wrong action" << endl;
 			cin.get(c);
-			while (c != '\n') {
+			while ((c != '\n')&& !cin.eof()) {
 				cin.get(c);
 			}
 		}
 		catch (WrongTabError) {
 			cout << "Wrong tab" << endl;
-			while (c != '\n') {
+			cin.get(c);
+			while ((c != '\n') && !cin.eof()) {
 				cin.get(c);
 			}
+
 		}
+		action = 'q';
 	}
 	return 0;
 }
