@@ -189,10 +189,10 @@ void arrayClass<DT>::expand() {
 	for (int i = 0; i < capacity; i++) {
 		newArray[i] = arrayOfDT[i];
 	}
-	for (int i = capacity; i < capacity * multiplier; ++i) 		
-	{
-		newArray[i] = 0;
-	}
+//	for (int i = capacity; i < capacity * multiplier; ++i) 		
+//	{
+//		newArray[i] = 0;
+//	}
 	delete[] arrayOfDT;
 	arrayOfDT = newArray;// new DT[capacity];
 	capacity = capacity * multiplier;
@@ -335,6 +335,7 @@ ostream& operator<< (ostream& s, browserTab& tab) {
 int main() {
 	arrayClass<browserTab> myTabs;
 	int tabNumber = 0;
+	int targetTabNumber;
 	int i;
 	arrayClass<char> webAddress;
 	char c;
@@ -357,7 +358,7 @@ int main() {
 					if (c != '\n') {
 						webAddress.add(c);// [i++] = c;
 					}
-				} while ((c != '\n') && (i < 201) && !cin.eof());
+				} while ((c != '\n') && !cin.eof());
 				new webAddressInfo(webAddress);
 				myTabs[tabNumber].addAddress(webAddress);
 				cout << tabNumber << " " << action << " ";
@@ -390,24 +391,25 @@ int main() {
 				break;
 			}
 			case 'M': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].display();
-				}
+				cin.get(blank);
+				cin.get(c);
+				targetTabNumber = c;
+				myTabs.insertAt(targetTabNumber, myTabs[tabNumber]);
 				break;
 			}
 			case 'R': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].display();
-				}
+				myTabs.removeAt(tabNumber);
 				break;
 			}
 			case 'C': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].display();
-				}
+				i = 0;
+				do {
+					cin.get(c);
+					if (c != '\n') {
+						webAddress.add(c);// [i++] = c;
+					}
+				} while ((c != '\n') && !cin.eof());
+				myTabs[tabNumber].addAddress(webAddress);
 				break;
 			}
 
