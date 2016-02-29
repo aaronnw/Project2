@@ -18,7 +18,7 @@ private:
 	const int defaultCapacity = 5;
 public:
 	arrayClass(); //Default constructor
-	arrayClass(DT* existingArray); // Initalizer constructor
+	arrayClass(DT* existingArray); //Initalizer constructor
 	arrayClass(int c); //Initializer constructor
 	arrayClass(const arrayClass<DT>& ac); // Copy constructor
 	~arrayClass(); // Destructor
@@ -40,9 +40,11 @@ class webAddressInfo {
 private:
 	arrayClass<char> url; //allow a a dynamic amount of characters
 public:
-	webAddressInfo();
-	webAddressInfo(arrayClass<char> inputString);
-	void setWebAddressInfo(arrayClass<char> inputString);
+	webAddressInfo(); //Default constructor
+	webAddressInfo(arrayClass<char> inputString); //Initalizer constructor
+	webAddressInfo(webAddressInfo& info); // Copy constructor
+	~webAddressInfo(); // Destructor
+	void setWebAddressInfo(arrayClass<char> inputString); 
 	arrayClass<char> getWebAddressInfo();
 	void display();
 };
@@ -55,13 +57,14 @@ protected:
 	int currentAddress; //index of current location in webAddresses
 						// other private methods if necessary for this class
 public:
-	browserTab();
-	browserTab(char* inputString); //creates a new tab with the inputString
+	browserTab();  //Default constructor
+	browserTab(arrayClass<char> inputString); //Initalizer constructor
+	browserTab(browserTab& tab); // Copy constructor
+	~browserTab(); // Destructor
 	webAddressInfo& forward();
 	webAddressInfo& backward();
 	void addAddress(arrayClass<char> inputString);
 	void display();
-	// and other public methods if necessary
 };
 
 //////////////////////////////////////////////////////////////////////////// 
@@ -206,6 +209,8 @@ ostream& operator<< (ostream& s, arrayClass<DT>& ac) {
 
 }
 
+//////////////////////////////////////////////////////////////////////////// 
+
 ///Default constructor
 webAddressInfo::webAddressInfo() {
 }
@@ -219,6 +224,10 @@ webAddressInfo::webAddressInfo(arrayClass<char> inputString) {
 	//	i++;
 	//}
 	url = inputString;
+}
+webAddressInfo::webAddressInfo(webAddressInfo & info) {
+}
+webAddressInfo::~webAddressInfo() {
 }
 ///Sets the url to a given string
 void webAddressInfo::setWebAddressInfo(arrayClass<char> inputString) {
@@ -246,15 +255,22 @@ void webAddressInfo::display() {
 	for (int i = 0; i < url.getSize(); ++i)
 		cout << url[i];
 }
+
+//////////////////////////////////////////////////////////////////////////// 
+
 ///Default constructor
 browserTab::browserTab() {
 	numAddress = 0;
 }
 ///Initializer
-browserTab::browserTab(char* inputString) {
+browserTab::browserTab(arrayClass<char> inputString) {
 	numAddress = 1;
 	webAddresses[numAddress - 1] = webAddressInfo(inputString);
 	currentAddress = numAddress - 1;
+}
+browserTab::browserTab(browserTab & tab) {
+}
+browserTab::~browserTab() {
 }
 ///Returns the information for an address forward from the current
 webAddressInfo& browserTab::forward() {
@@ -288,6 +304,9 @@ void browserTab::display() {
 		webAddresses[i].display();
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////// 
+
 ///Main method
 int main() {
 	arrayClass<browserTab> myTabs;
