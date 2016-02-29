@@ -132,7 +132,6 @@ void arrayClass<DT>::add(DT & x) {
 		expand();
 		add(x);
 	}
-
 }
 
 template<class DT>
@@ -210,6 +209,8 @@ ostream& operator<< (ostream& s, arrayClass<DT>& ac) {
 	return s;
 
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 ///Default constructor
 webAddressInfo::webAddressInfo() {
