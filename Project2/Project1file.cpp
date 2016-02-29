@@ -111,6 +111,7 @@ template<class DT>
 arrayClass<DT>::~arrayClass() {
 	delete[] arrayOfDT;
 }
+
 ///Overloaded assignment operator
 template<class DT>
 void arrayClass<DT>::operator= (const arrayClass<DT>& ac) {
@@ -291,8 +292,8 @@ browserTab::~browserTab() {
 }
 void browserTab::operator=(const browserTab & tab) {
 	numAddress = tab.numAddress;
-	webAddresses = tab.webAddresses;
 	currentAddress = tab.currentAddress;
+	webAddresses = tab.webAddresses;
 }
 ///Returns the information for an address forward from the current
 webAddressInfo& browserTab::forward() {
@@ -374,7 +375,7 @@ int main() {
 				if (tabNumber > myTabs.getSize()) {
 					myTabs.add(newTab);
 				}else
-					myTabs[tabNumber].addAddress(webAddress);
+					myTabs[tabNumber-1].addAddress(webAddress);
 				cout << tabNumber << " " << action << " " << webAddress;
 				break;
 			}
@@ -385,7 +386,7 @@ int main() {
 				}
 				if (!cin.eof()) {
 					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].forward().display();
+					myTabs[tabNumber-1].forward().display();
 				}
 				break;
 			}
@@ -396,7 +397,7 @@ int main() {
 				}
 				if (!cin.eof()) {
 					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].backward().display();
+					myTabs[tabNumber-1].backward().display();
 				}
 				break;
 			}
@@ -407,7 +408,7 @@ int main() {
 				}
 				if (!cin.eof()) {
 					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].display();
+					myTabs[tabNumber-1].display();
 				}
 				break;
 			}
@@ -416,9 +417,16 @@ int main() {
 					throw WrongTabError();
 				}
 				cin.get(blank);
-				cin.get(c);
-				targetTabNumber = c;
-				myTabs.insertAt(targetTabNumber, myTabs[tabNumber]);
+				cin >> targetTabNumber;
+				cout << tabNumber << " " << action<< " " << targetTabNumber << "  Move tab " << tabNumber << " to " << targetTabNumber;
+				if (tabNumber > targetTabNumber) {
+					myTabs.insertAt(targetTabNumber - 1, myTabs[tabNumber]);
+					myTabs.removeAt(myTabs.getSize() - 1);
+				}
+				else if(tabNumber < targetTabNumber){
+					myTabs.insertAt(targetTabNumber, myTabs[tabNumber - 1]);
+					myTabs.removeAt(tabNumber - 1);
+				}
 				break;
 			}
 			case 'R': {
@@ -440,7 +448,7 @@ int main() {
 						webAddress.add(c);// [i++] = c;
 					}
 				} while ((c != '\n') && !cin.eof());
-				myTabs[tabNumber].changeCurrentAddress(webAddress);
+				myTabs[tabNumber-1].changeCurrentAddress(webAddress);
 				cout << tabNumber << " " << action << " " << webAddress;
 				break;
 			}
