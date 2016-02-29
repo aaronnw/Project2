@@ -18,14 +18,14 @@ private:
 	int numElements;
 	int capacity;
 	const int multiplier = 2;
-	const int defaultCapacity = 5;
+	const int defaultCapacity = 500;
 public:
 	arrayClass(); //Default constructor
 	arrayClass(DT* existingArray); //Initalizer constructor
 	arrayClass(int c); //Initializer constructor
 	arrayClass(const arrayClass<DT>& ac); // Copy constructor
 	~arrayClass(); // Destructor
-	void operator= (const arrayClass<DT>& ac); //Overloaded assignment operator
+	arrayClass<DT>& operator= (const arrayClass<DT>& ac); //Overloaded assignment operator
 	DT& operator[](int i);
 	void add(DT& x);
 	void insertAt(int i, DT& x);
@@ -113,13 +113,9 @@ arrayClass<DT>::~arrayClass() {
 }
 ///Overloaded assignment operator
 template<class DT>
-void arrayClass<DT>::operator=(const arrayClass & ac) {
-	numElements = ac.numElements;
-	capacity = ac.capacity;
-	arrayOfDT = new DT[capacity];
-	for (int i = 0; i < capacity; i++) {
-		arrayOfDT[i] = ac.arrayOfDT[i];
-	}
+arrayClass<DT>& arrayClass<DT>::operator= (const arrayClass& ac) {
+	arrayClass<DT> newAC = arrayClass<DT>(ac);
+	return newAC;
 }
 ///Overloaded square bracket operator
 template<class DT>
@@ -171,7 +167,7 @@ void arrayClass<DT>::removeAt(int i) {
 }
 template<class DT>
 void arrayClass<DT>::expand() {
-	/*//Create a copy of the current array with a larger capacity
+	//Create a copy of the current array with a larger capacity
 	capacity = capacity * multiplier;
 	DT* newArray = new DT[capacity];
 	for (int i = 0; i < capacity; i++) {
@@ -182,8 +178,8 @@ void arrayClass<DT>::expand() {
 	for (int i = 0; i < capacity; i++) {
 		arrayOfDT[i] = newArray[i];
 	}
-	delete[] newArray;*/
-	//Create a copy of the current array with a larger capacity
+	delete[] newArray;
+/*	//Create a copy of the current array with a larger capacity
 	
 	DT* newArray = new DT[capacity * multiplier];
 	for (int i = 0; i < capacity; i++) {
@@ -195,7 +191,9 @@ void arrayClass<DT>::expand() {
 //	}
 	delete[] arrayOfDT;
 	arrayOfDT = newArray;// new DT[capacity];
+	
 	capacity = capacity * multiplier;
+	*/
 }
 template<class DT>
 void arrayClass<DT>::empty() {
@@ -378,6 +376,9 @@ int main() {
 			}
 					  //Move to the next address in the tab and display the url
 			case 'F': {
+				if (tabNumber > myTabs.getSize()) {
+					throw WrongTabError();
+				}
 				if (!cin.eof()) {
 					cout << tabNumber << " " << action << " ";
 					myTabs[tabNumber].forward().display();
@@ -386,6 +387,9 @@ int main() {
 			}
 					  //Move to the previous address in the tab and display the url
 			case 'B': {
+				if (tabNumber > myTabs.getSize()) {
+					throw WrongTabError();
+				}
 				if (!cin.eof()) {
 					cout << tabNumber << " " << action << " ";
 					myTabs[tabNumber].backward().display();
@@ -394,6 +398,9 @@ int main() {
 			}
 					  //Print all the address information in the tab
 			case 'P': {
+				if (tabNumber > myTabs.getSize()) {
+					throw WrongTabError();
+				}
 				if (!cin.eof()) {
 					cout << tabNumber << " " << action << " ";
 					myTabs[tabNumber].display();
@@ -401,6 +408,9 @@ int main() {
 				break;
 			}
 			case 'M': {
+				if (tabNumber > myTabs.getSize()) {
+					throw WrongTabError();
+				}
 				cin.get(blank);
 				cin.get(c);
 				targetTabNumber = c;
@@ -408,11 +418,17 @@ int main() {
 				break;
 			}
 			case 'R': {
+				if (tabNumber > myTabs.getSize()) {
+					throw WrongTabError();
+				}
 				cout << tabNumber << " " << action << " " << " Removed tab " << tabNumber;
 				myTabs.removeAt(tabNumber);
 				break;
 			}
 			case 'C': {
+				if (tabNumber > myTabs.getSize()) {
+					throw WrongTabError();
+				}
 				i = 0;
 				do {
 					cin.get(c);
