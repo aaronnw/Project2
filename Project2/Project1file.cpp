@@ -25,7 +25,7 @@ public:
 	arrayClass(int c); //Initializer constructor
 	arrayClass(const arrayClass<DT>& ac); // Copy constructor
 	~arrayClass(); // Destructor
-	arrayClass<DT>& operator= (const arrayClass<DT>& ac); //Overloaded assignment operator
+	void operator= (const arrayClass<DT>& ac); //Overloaded assignment operator
 	DT& operator[](int i);
 	void add(DT& x);
 	void insertAt(int i, DT& x);
@@ -98,7 +98,7 @@ arrayClass<DT>::arrayClass(int c) {
 }
 ///Copy constructor
 template<class DT>
-arrayClass<DT>::arrayClass(const arrayClass & ac) {
+arrayClass<DT>::arrayClass(const arrayClass<DT>& ac) {
 	numElements = ac.numElements;
 	capacity = ac.capacity;
 	arrayOfDT = new DT[capacity];
@@ -113,9 +113,13 @@ arrayClass<DT>::~arrayClass() {
 }
 ///Overloaded assignment operator
 template<class DT>
-arrayClass<DT>& arrayClass<DT>::operator= (const arrayClass& ac) {
-	arrayClass<DT> newAC = arrayClass<DT>(ac);
-	return newAC;
+void arrayClass<DT>::operator= (const arrayClass<DT>& ac) {
+	arrayOfDT = new DT[ac.capacity];
+	for (int i = 0; i < ac.capacity; i++) {
+		arrayOfDT[i] = ac.arrayOfDT[i];
+	}
+	numElements = ac.numElements;
+	capacity = ac.capacity;
 }
 ///Overloaded square bracket operator
 template<class DT>
@@ -167,7 +171,7 @@ void arrayClass<DT>::removeAt(int i) {
 }
 template<class DT>
 void arrayClass<DT>::expand() {
-	//Create a copy of the current array with a larger capacity
+/*	//Create a copy of the current array with a larger capacity
 	capacity = capacity * multiplier;
 	DT* newArray = new DT[capacity];
 	for (int i = 0; i < capacity; i++) {
@@ -179,7 +183,7 @@ void arrayClass<DT>::expand() {
 		arrayOfDT[i] = newArray[i];
 	}
 	delete[] newArray;
-/*	//Create a copy of the current array with a larger capacity
+		*///Create a copy of the current array with a larger capacity
 	
 	DT* newArray = new DT[capacity * multiplier];
 	for (int i = 0; i < capacity; i++) {
@@ -193,7 +197,7 @@ void arrayClass<DT>::expand() {
 	arrayOfDT = newArray;// new DT[capacity];
 	
 	capacity = capacity * multiplier;
-	*/
+
 }
 template<class DT>
 void arrayClass<DT>::empty() {
