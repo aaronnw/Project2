@@ -7,12 +7,13 @@ void strEmpty(char* someStr, int length) {
 }
 template<class DT>
 class arrayClass {
+	friend 	ostream& operator<< (ostream& s, arrayClass<DT>& ac); //Overloaded ostream operator
 private:
 	DT* arrayOfDT;
 	int numElements;
 	int capacity;
 	const int multiplier = 2;
-	const int defaultCapacity = 50;
+	const int defaultCapacity = 5;
 public:
 	arrayClass(); //Default constructor
 	arrayClass(DT* existingArray); // Initalizer constructor
@@ -28,6 +29,9 @@ public:
 	void expand();
 	void empty();
 	int getCapacity();
+	int getSize() {
+		return numElements;
+	}
 };
 ///Class for web address information
 class webAddressInfo {
@@ -92,6 +96,7 @@ arrayClass<DT>::arrayClass(const arrayClass & ac) {
 ///Destructor
 template<class DT>
 arrayClass<DT>::~arrayClass() {
+	delete[] arrayOfDT;
 }
 ///Overloaded assignment operator
 template<class DT>
@@ -155,7 +160,7 @@ void arrayClass<DT>::removeAt(int i) {
 }
 template<class DT>
 void arrayClass<DT>::expand() {
-	//Create a copy of the current array with a larger capacity
+	/*//Create a copy of the current array with a larger capacity
 	capacity = capacity * multiplier;
 	DT* newArray = new DT[capacity];
 	for (int i = 0; i < capacity; i++) {
@@ -166,17 +171,42 @@ void arrayClass<DT>::expand() {
 	for (int i = 0; i < capacity; i++) {
 		arrayOfDT[i] = newArray[i];
 	}
-	delete[] newArray;
+	delete[] newArray;*/
+	//Create a copy of the current array with a larger capacity
+	
+	DT* newArray = new DT[capacity * multiplier];
+	for (int i = 0; i < capacity; i++) {
+		newArray[i] = arrayOfDT[i];
+	}
+	for (int i = capacity; i < capacity * multiplier; ++i) 		
+	{
+		newArray[i] = 0;
+	}
+	delete[] arrayOfDT;
+	arrayOfDT = newArray;// new DT[capacity];
+	capacity = capacity * multiplier;
 }
 template<class DT>
 void arrayClass<DT>::empty() {
-	for (int i = 0; i < capacity; i++) {
-		arrayOfDT[i] = '\0';
-	}
+	numElements = 0;
 }
 template<class DT>
 int arrayClass<DT>::getCapacity() {
 	return capacity;
+}
+
+//Overloaded ostream operator
+template<class DT>
+ostream& operator<< (ostream& s, arrayClass<DT>& ac) {
+	s << "[";
+	for (int i = 0; i < ac.getSize(); i++) {
+		if (i > 0) {
+			s << ',';
+		}
+		s << ac[i];
+	}
+	s << "]";
+	return s;
 }
 ///Default constructor
 webAddressInfo::webAddressInfo() {
@@ -186,17 +216,22 @@ webAddressInfo::webAddressInfo(arrayClass<char> inputString) {
 	int i = 0;
 	url.empty();
 	//Make a deep copy from the input string to the url
-	while (inputString[i] != '\0') {
-		url[i] = inputString[i];
-		i++;
-	}
+	//while (inputString[i] != '\0') {
+	//	url[i] = inputString[i];
+	//	i++;
+	//}
+	url = inputString;
 }
 ///Sets the url to a given string
 void webAddressInfo::setWebAddressInfo(arrayClass<char> inputString) {
 	int i = 0;
-	while (inputString[i] != '\0') {
-		url[i] = inputString[i];
-	}
+	//while (inputString[i] != '\0') {
+	//	url[i] = inputString[i];
+	//}
+	//for (int i = 0; i < inputString.getSize(); ++i) 		{
+	//	url[i] = inputString[i];
+	//}
+	url = inputString;
 }
 ///Returns the character array for the web address
 arrayClass<char> webAddressInfo::getWebAddressInfo() {
@@ -206,10 +241,12 @@ arrayClass<char> webAddressInfo::getWebAddressInfo() {
 void webAddressInfo::display() {
 	int i = 0;
 	//Print out each valid character in the url
-	while (url[i] != '\0') {
+	//while (url[i] != '\0') {
+	//	cout << url[i];
+	//	i++;
+	//}
+	for (int i = 0; i < url.getSize(); ++i)
 		cout << url[i];
-		i++;
-	}
 }
 ///Default constructor
 browserTab::browserTab() {
@@ -276,14 +313,14 @@ int main() {
 			do {
 				cin.get(c);
 				if (c != '\n') {
-					webAddress[i++] = c;
+					webAddress.add(c);// [i++] = c;
 				}
 			} while ((c != '\n') && (i < 201) && !cin.eof());
 			new webAddressInfo(webAddress);
 			myTabs[tabNumber].addAddress(webAddress);
-			cout << tabNumber;
-			cout << " " << action << " ";
-//			cout << webAddress;
+			cout << tabNumber << " " << action << " ";
+			myTabs[tabNumber].display();
+			cout << webAddress;
 			break;
 		}
 				  //Move to the next address in the tab and display the url
@@ -305,6 +342,27 @@ int main() {
 		}
 				  //Print all the address information in the tab
 		case 'P': {
+			if (!cin.eof()) {
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].display();
+			}
+			break;
+		}
+		case 'M': {
+			if (!cin.eof()) {
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].display();
+			}
+			break;
+		}
+		case 'R': {
+			if (!cin.eof()) {
+				cout << tabNumber << " " << action << " ";
+				myTabs[tabNumber].display();
+			}
+			break;
+		}
+		case 'C': {
 			if (!cin.eof()) {
 				cout << tabNumber << " " << action << " ";
 				myTabs[tabNumber].display();
