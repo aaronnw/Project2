@@ -61,8 +61,8 @@ protected:
 	arrayClass<webAddressInfo> webAddresses; //Web addreses in this tab
 	int currentAddress; //index of current location in webAddresses
 public:
-	browserTab();
-	browserTab(char* inputString); //creates a new tab with the inputString
+	browserTab(); //Default constructor
+	browserTab(arrayClass<char> inputString); //Initializer constructor
 	webAddressInfo& forward();
 	webAddressInfo& backward();
 	void addAddress(arrayClass<char> inputString);
@@ -271,7 +271,7 @@ browserTab::browserTab() {
 	numAddress = 0;
 }
 ///Initializer
-browserTab::browserTab(char* inputString) {
+browserTab::browserTab(arrayClass<char> inputString) {
 	numAddress = 1;
 	webAddresses[numAddress - 1] = webAddressInfo(inputString);
 	currentAddress = numAddress - 1;
@@ -337,7 +337,7 @@ int main() {
 					if (c != '\n') {
 						webAddress.add(c);// [i++] = c;
 					}
-				} while ((c != '\n') && (i < 201) && !cin.eof());
+				} while ((c != '\n') && !cin.eof());
 				new webAddressInfo(webAddress);
 				myTabs[tabNumber].addAddress(webAddress);
 				cout << tabNumber << " " << action << " ";
