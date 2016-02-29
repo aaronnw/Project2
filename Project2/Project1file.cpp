@@ -40,11 +40,15 @@ public:
 };
 ///Class for web address information
 class webAddressInfo {
+	friend ostream& operator<< (ostream& s, webAddressInfo& info); //Overloaded ostream operator
 private:
 	arrayClass<char> url; //allow a a dynamic amount of characters
 public:
-	webAddressInfo();
-	webAddressInfo(arrayClass<char> inputString);
+	webAddressInfo(); //Default constructor
+	webAddressInfo(arrayClass<char> inputString); //Initializer constructor
+	webAddressInfo(webAddressInfo& info); //Copy constructor
+	~webAddressInfo(); //Destructor
+	void operator= (const webAddressInfo& info); //Overloaded assignment operator
 	void setWebAddressInfo(arrayClass<char> inputString);
 	arrayClass<char> getWebAddressInfo();
 	void display();
@@ -56,7 +60,6 @@ protected:
 	int numAddress; //Current number of web addresses in this tab
 	arrayClass<webAddressInfo> webAddresses; //Web addreses in this tab
 	int currentAddress; //index of current location in webAddresses
-						// other private methods if necessary for this class
 public:
 	browserTab();
 	browserTab(char* inputString); //creates a new tab with the inputString
@@ -64,7 +67,6 @@ public:
 	webAddressInfo& backward();
 	void addAddress(arrayClass<char> inputString);
 	void display();
-	// and other public methods if necessary
 };
 
 //////////////////////////////////////////////////////////////////////////// 
@@ -223,6 +225,12 @@ webAddressInfo::webAddressInfo(arrayClass<char> inputString) {
 	//}
 	url = inputString;
 }
+webAddressInfo::webAddressInfo(webAddressInfo & info) {
+}
+webAddressInfo::~webAddressInfo() {
+}
+void webAddressInfo::operator=(const webAddressInfo & info) {
+}
 ///Sets the url to a given string
 void webAddressInfo::setWebAddressInfo(arrayClass<char> inputString) {
 	int i = 0;
@@ -246,9 +254,17 @@ void webAddressInfo::display() {
 	//	cout << url[i];
 	//	i++;
 	//}
-	for (int i = 0; i < url.getSize(); ++i)
+	for (int i = 0; i < url.getSize(); ++i) {
 		cout << url[i];
+	}
 }
+ostream& operator<< (ostream& s, webAddressInfo& info) {
+	//TODO
+	return s;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
 ///Default constructor
 browserTab::browserTab() {
 	numAddress = 0;
@@ -291,10 +307,13 @@ void browserTab::display() {
 		webAddresses[i].display();
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
 ///Main method
 int main() {
 	arrayClass<browserTab> myTabs;
 	int tabNumber = 0;
+	int targetTabNumber;
 	int i;
 	arrayClass<char> webAddress;
 	char c;
@@ -350,10 +369,10 @@ int main() {
 				break;
 			}
 			case 'M': {
-				if (!cin.eof()) {
-					cout << tabNumber << " " << action << " ";
-					myTabs[tabNumber].display();
-				}
+				cin.get(c);
+				cin.get(c);
+				targetTabNumber = c;
+				// myTabs[tabNumber].moveTo(myTabs, targetTabNumber);
 				break;
 			}
 			case 'R': {
@@ -377,7 +396,7 @@ int main() {
 			}
 			cout << endl;
 		}
-		catch (WrongActionError& e) {
+		catch (WrongActionError) {
 			cout << "Wrong action" << endl;
 			cin.get(c);
 			while (c != '\n') {
