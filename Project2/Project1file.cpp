@@ -1,11 +1,5 @@
 #include <iostream>
 using namespace std;
-void strEmpty(char* someStr, int length) {
-	for (int i = 0; i < length; i++) {
-		someStr[i] = '\0';
-	}
-}
-
 class WrongTabError {};
 class WrongActionError {};
 
@@ -18,7 +12,7 @@ private:
 	int numElements;
 	int capacity;
 	const int multiplier = 2;
-	const int defaultCapacity = 500;
+	const int defaultCapacity = 50;
 public:
 	arrayClass(); //Default constructor
 	arrayClass(DT* existingArray); //Initalizer constructor
@@ -86,11 +80,6 @@ arrayClass<DT>::arrayClass() {
 }
 ///Initializer constructor
 template<class DT>
-arrayClass<DT>::arrayClass(DT * existingArray) {
-	//TODO
-}
-///Initializer constructor
-template<class DT>
 arrayClass<DT>::arrayClass(int c) {
 	numElements = 0;
 	capacity = c;
@@ -111,7 +100,6 @@ template<class DT>
 arrayClass<DT>::~arrayClass() {
 	delete[] arrayOfDT;
 }
-
 ///Overloaded assignment operator
 template<class DT>
 void arrayClass<DT>::operator= (const arrayClass<DT>& ac) {
@@ -128,6 +116,7 @@ DT & arrayClass<DT>::operator[](int i) {
 	//TODO if ((i < 0) || (i >= (capacity - 1))) throw errors;
 	return arrayOfDT[i];
 }
+///Add an element to the end of the array
 template<class DT>
 void arrayClass<DT>::add(DT & x) {
 	//If there is room, add to the end of current array
@@ -141,7 +130,7 @@ void arrayClass<DT>::add(DT & x) {
 	}
 
 }
-
+///Insert an element into the array
 template<class DT>
 void arrayClass<DT>::insertAt(int i, DT & x) {
 	if ((numElements < capacity) && (i < capacity)) {
@@ -156,12 +145,7 @@ void arrayClass<DT>::insertAt(int i, DT & x) {
 		insertAt(i, x);
 	}
 }
-
-template<class DT>
-void arrayClass<DT>::remove() {
-	//TODO do iaeven need this
-}
-
+///Remove an element from a given index
 template<class DT>
 void arrayClass<DT>::removeAt(int i) {
 	for (i; i < (numElements); i++) {
@@ -170,6 +154,7 @@ void arrayClass<DT>::removeAt(int i) {
 	numElements--;
 	//error input
 }
+///Increase the size of the array
 template<class DT>
 void arrayClass<DT>::expand() {
 /*	//Create a copy of the current array with a larger capacity
@@ -200,15 +185,17 @@ void arrayClass<DT>::expand() {
 	capacity = capacity * multiplier;
 
 }
+///Show the array as empty
 template<class DT>
 void arrayClass<DT>::empty() {
 	numElements = 0;
 }
+///Return the capacity
 template<class DT>
 int arrayClass<DT>::getCapacity() {
 	return capacity;
 }
-
+///Overloaded ostream operator
 template<class DT>
 ostream& operator<< (ostream& s, arrayClass<DT>& ac) {
 	for (int i = 0; i < ac.getSize(); i++) {
@@ -223,7 +210,7 @@ ostream& operator<< (ostream& s, arrayClass<DT>& ac) {
 ///Default constructor
 webAddressInfo::webAddressInfo() {
 }
-///Initializer
+///Initializer constructor
 webAddressInfo::webAddressInfo(arrayClass<char> inputString) {
 	int i = 0;
 	url.empty();
@@ -234,10 +221,14 @@ webAddressInfo::webAddressInfo(arrayClass<char> inputString) {
 	//}
 	url = inputString;
 }
+///Copy constructor
 webAddressInfo::webAddressInfo(webAddressInfo & info) {
+	url = info.url;
 }
+///Destructor
 webAddressInfo::~webAddressInfo() {
 }
+///Overloaded assignment operator
 void webAddressInfo::operator=(const webAddressInfo & info) {
 	url = info.url;
 }
@@ -267,7 +258,7 @@ void webAddressInfo::display() {
 	for (int i = 0; i < url.getSize(); ++i)
 		cout << url[i];
 }
-
+///Overloaded ostream operator
 ostream& operator<< (ostream& s, webAddressInfo& info) {
 	//TODO
 	return s;
@@ -280,16 +271,19 @@ ostream& operator<< (ostream& s, webAddressInfo& info) {
 browserTab::browserTab() {
 	numAddress = 0;
 }
-///Initializer
+///Initializer constructor
 browserTab::browserTab(arrayClass<char> inputString) {
 	numAddress = 1;
 	webAddresses[numAddress - 1] = webAddressInfo(inputString);
 	currentAddress = numAddress - 1;
 }
+///Copy constructor
 browserTab::browserTab(browserTab & tab) {
 }
+///Destructor
 browserTab::~browserTab() {
 }
+///Overloaded assignment operator
 void browserTab::operator=(const browserTab & tab) {
 	numAddress = tab.numAddress;
 	currentAddress = tab.currentAddress;
@@ -315,9 +309,11 @@ webAddressInfo& browserTab::backward() {
 		return webAddresses[currentAddress];
 	}
 }
+///Returns the information at the current address
 webAddressInfo & browserTab::getCurrentAddress() {
 	return webAddresses[currentAddress];
 }
+///Changes the current address of the tab
 void browserTab::changeCurrentAddress(arrayClass<char> inputString) {
 	webAddresses[currentAddress].setWebAddressInfo(inputString);
 }
@@ -333,7 +329,7 @@ void browserTab::display() {
 		webAddresses[i].display();
 	}
 }
-
+///Overloaded ostream operator
 ostream& operator<< (ostream& s, browserTab& tab) {
 	//TODO
 	return s;
@@ -412,6 +408,7 @@ int main() {
 				}
 				break;
 			}
+					  //Move the information from the first listed tab to the second
 			case 'M': {
 				if (tabNumber > myTabs.getSize()) {
 					throw WrongTabError();
@@ -429,6 +426,7 @@ int main() {
 				}
 				break;
 			}
+					  //Remove a tab completely
 			case 'R': {
 				if (tabNumber > myTabs.getSize()) {
 					throw WrongTabError();
@@ -437,6 +435,7 @@ int main() {
 				myTabs.removeAt(tabNumber);
 				break;
 			}
+					//Change the address of a tab
 			case 'C': {
 				if (tabNumber > myTabs.getSize()) {
 					throw WrongTabError();
@@ -459,6 +458,7 @@ int main() {
 			}
 			cout << endl;
 		}
+		///Handle errors if an incorrect tab or action is entered
 		catch (WrongActionError) {
 			cout << "Wrong action" << endl;
 			cin.get(c);
