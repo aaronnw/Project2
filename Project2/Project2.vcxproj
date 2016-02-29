@@ -147,8 +147,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Project1file.cpp" />
-    <ClCompile Include="SlideResources.cpp" />
-    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
