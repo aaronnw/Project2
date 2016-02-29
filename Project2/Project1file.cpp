@@ -69,6 +69,8 @@ public:
 	void operator= (const browserTab& tab); //Overloaded assignment operator
 	webAddressInfo& forward();
 	webAddressInfo& backward();
+	webAddressInfo& getCurrentAddress();
+	void changeCurrentAddress(arrayClass<char> inputString);
 	void addAddress(arrayClass<char> inputString);
 	void display();
 };
@@ -161,12 +163,10 @@ void arrayClass<DT>::remove() {
 
 template<class DT>
 void arrayClass<DT>::removeAt(int i) {
-	if (i < capacity) {
-		for (i; i < (numElements - 1); i++) {
-			arrayOfDT[i] = arrayOfDT[i + 1];
-		}
-		numElements--;
+	for (i; i < (numElements); i++) {
+		arrayOfDT[i] = arrayOfDT[i + 1];
 	}
+	numElements--;
 	//error input
 }
 template<class DT>
@@ -270,6 +270,7 @@ ostream& operator<< (ostream& s, webAddressInfo& info) {
 	return s;
 
 }
+
 //////////////////////////////////////////////////////////////////////////// 
 
 ///Default constructor
@@ -310,6 +311,12 @@ webAddressInfo& browserTab::backward() {
 	else {
 		return webAddresses[currentAddress];
 	}
+}
+webAddressInfo & browserTab::getCurrentAddress() {
+	return webAddresses[currentAddress];
+}
+void browserTab::changeCurrentAddress(arrayClass<char> inputString) {
+	webAddresses[currentAddress].setWebAddressInfo(inputString);
 }
 ///Adds a new address to a tab
 void browserTab::addAddress(arrayClass<char> inputString) {
@@ -359,10 +366,14 @@ int main() {
 						webAddress.add(c);// [i++] = c;
 					}
 				} while ((c != '\n') && !cin.eof());
-				new webAddressInfo(webAddress);
-				myTabs[tabNumber].addAddress(webAddress);
-				cout << tabNumber << " " << action << " ";
-				myTabs[tabNumber].display();
+				webAddressInfo webAddressInfo(webAddress);
+				browserTab newTab;
+				newTab.addAddress(webAddress);
+				if (tabNumber > myTabs.getSize()) {
+					myTabs.add(newTab);
+				}else
+					myTabs[tabNumber].addAddress(webAddress);
+				cout << tabNumber << " " << action << " " << webAddress;
 				break;
 			}
 					  //Move to the next address in the tab and display the url
@@ -378,7 +389,6 @@ int main() {
 				if (!cin.eof()) {
 					cout << tabNumber << " " << action << " ";
 					myTabs[tabNumber].backward().display();
-
 				}
 				break;
 			}
@@ -398,6 +408,7 @@ int main() {
 				break;
 			}
 			case 'R': {
+				cout << tabNumber << " " << action << " " << " Removed tab " << tabNumber;
 				myTabs.removeAt(tabNumber);
 				break;
 			}
@@ -409,11 +420,13 @@ int main() {
 						webAddress.add(c);// [i++] = c;
 					}
 				} while ((c != '\n') && !cin.eof());
-				myTabs[tabNumber].addAddress(webAddress);
+				myTabs[tabNumber].changeCurrentAddress(webAddress);
+				cout << tabNumber << " " << action << " " << webAddress;
 				break;
 			}
 
 			default: {
+				throw WrongActionError();
 			}
 			}
 			cout << endl;
